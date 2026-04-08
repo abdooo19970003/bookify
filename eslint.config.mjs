@@ -5,6 +5,10 @@ import nextTs from "eslint-config-next/typescript";
 const eslintConfig = defineConfig([
   ...nextVitals,
   ...nextTs,
+  "standart",
+  "plugin:prettier/recommended",
+  "plugin:@typescript-eslint/recommended",
+  "plugin:tailwindcss/recommended",
   // Override default ignores of eslint-config-next.
   globalIgnores([
     // Default ignores of eslint-config-next:
