@@ -7,6 +7,9 @@ import { users } from '@/database/schema'
 import { AuthCredentials } from '@/types'
 import { hash } from 'bcryptjs'
 import { signIn, signOut } from '@/auth'
+import { headers } from 'next/headers'
+import ratelimit from '../ratelimit'
+import { redirect } from 'next/navigation'
 
 export const signOutAction = async () => {
   await signOut()
@@ -14,9 +17,15 @@ export const signOutAction = async () => {
 
 
 export const signInWithCredentials = async (params: Pick<AuthCredentials, 'email' | 'password'>) => {
+  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1"
+  console.log('ip', ip)
+  const { success } = await ratelimit.limit(ip);
+  if (!success) {
+    redirect("/too-fast")
+  }
   try {
     const { email, password } = params
-    const result = await signIn('credentials', { email, password, redirect: false, redirectTo: '/' })
+    const result = await signIn('credentials', { email, password, redirect: false })
     if (result?.error) {
       console.error('Sign in Error: ', result.error)
       return {
@@ -40,7 +49,12 @@ export const signInWithCredentials = async (params: Pick<AuthCredentials, 'email
 export const signUpAction = async (
   params: AuthCredentials,
 ) => {
-  console.log('params', params)
+  const ip = (await headers()).get("x-forwarded-for") || "127.0.0.1"
+  console.log('ip', ip)
+  const { success } = await ratelimit.limit(ip);
+  if (!success) {
+    redirect("/too-fast")
+  }
   const { fullName, email, password, universityId, universityCard } = params
   const existingUser = await db
     .select()

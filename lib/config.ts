@@ -9,8 +9,11 @@ const config = {
     prodEndpoint: process.env.NEXT_PUBLIC_PROD_API_ENDPOINT || "",
   },
   databaseUrl: process.env.DATABASE_URL || "",
-  authSecret: process.env.BETTER_AUTH_SECRET || ""
-
+  authSecret: process.env.BETTER_AUTH_SECRET || "",
+  upstash: {
+    databaseUrl: process.env.UPSTASH_REDIS_REST_URL || "",
+    token: process.env.UPSTASH_REDIS_REST_TOKEN || ""
+  }
 };
 
 export default config;
