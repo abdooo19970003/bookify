@@ -1,5 +1,5 @@
-"use client";
-import config from "../lib/config";
+'use client'
+import config from '../lib/config'
 import {
   Image,
   ImageKitAbortError,
@@ -8,28 +8,28 @@ import {
   ImageKitServerError,
   ImageKitUploadNetworkError,
   upload,
-} from "@imagekit/next";
-import { useRef, useState } from "react";
-import { Button } from "./ui/button";
-import { cn } from "@/lib/utils";
-
+} from '@imagekit/next'
+import { useRef, useState } from 'react'
+import { Button } from './ui/button'
+import { cn } from '@/lib/utils'
+import { Upload } from 'lucide-react'
 const authenticator = async () => {
-  const res = await fetch(`${config.api.endpoint}/auth/imagekit`);
+  const res = await fetch(`${config.api.endpoint}/auth/imagekit`)
   if (!res.ok) {
-    throw new Error("Authentication failed");
+    throw new Error('Authentication failed')
   }
-  return res.json();
-};
+  return res.json()
+}
 
 interface Props {
-  variant?: "dark" | "light";
-  fieldName: string;
-  value?: string;
-  onChange?: (value: string) => void;
+  variant?: 'dark' | 'light'
+  fieldName: string
+  value?: string
+  onChange?: (value: string) => void
 }
 
 const FileUpload = ({
-  variant = "dark",
+  variant = 'dark',
   fieldName,
   value,
   onChange,
@@ -37,47 +37,44 @@ const FileUpload = ({
 }: Props) => {
   const styles = {
     button:
-      variant === "dark"
-        ? "bg-dark-300"
-        : "bg-light-600 border-gray-100 border",
-    placeholder: variant === "dark" ? "text-light-100" : "text-slate-500",
-    text: variant === "dark" ? "text-light-100" : "text-dark-400",
-  };
+      variant === 'dark'
+        ? 'bg-dark-300'
+        : 'bg-light-600 border-gray-100 border',
+    placeholder: variant === 'dark' ? 'text-light-100' : 'text-slate-500',
+    text: variant === 'dark' ? 'text-light-100' : 'text-dark-400',
+  }
 
-  const [progress, setProgress] = useState(0);
-  const [isLoading, setIsLoading] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const abortControllerRef = useRef<AbortController | null>(null);
-  const [file, setFile] = useState<File | undefined>();
+  const [isLoading, setIsLoading] = useState(false)
+  const fileInputRef = useRef<HTMLInputElement>(null)
+  const abortControllerRef = useRef<AbortController | null>(null)
+  const [file, setFile] = useState<File | undefined>()
   const handleFileChange = async (
     event: React.ChangeEvent<HTMLInputElement>,
   ) => {
-    const selectedFile = event.target.files?.[0];
-    if (!selectedFile) return;
+    const selectedFile = event.target.files?.[0]
+    if (!selectedFile) return
 
-    setFile(selectedFile);
+    setFile(selectedFile)
 
     // Validate file
     if (selectedFile.size > 5 * 1024 * 1024) {
-      console.error("File too large");
-      return;
+      console.error('File too large')
+      return
     }
-    if (!selectedFile.type.startsWith("image/")) {
-      console.error("Invalid file type");
-      return;
+    if (!selectedFile.type.startsWith('image/')) {
+      console.error('Invalid file type')
+      return
     }
 
-    setIsLoading(true);
-    setProgress(0);
-    abortControllerRef.current = new AbortController();
-    let authParams: any;
+    setIsLoading(true)
+    abortControllerRef.current = new AbortController()
+    let authParams: any
     try {
-      authParams = await authenticator();
+      authParams = await authenticator()
     } catch (authError) {
-      console.error("Authentication failed:", authError);
-      setIsLoading(false);
-      setProgress(0);
-      return;
+      console.error('Authentication failed:', authError)
+      setIsLoading(false)
+      return
     }
     try {
       const uploadResponse = await upload({
@@ -85,76 +82,61 @@ const FileUpload = ({
         publicKey: config.imagekit.publicKey,
         file: selectedFile,
         fileName: selectedFile.name,
-        onProgress: (event) => {
-          setProgress(event.loaded / event.total);
-        },
         abortSignal: abortControllerRef.current.signal,
-      });
-      onChange?.(uploadResponse.url!);
-      console.log("Upload successful", uploadResponse);
+        folder: 'bookify/university-cards',
+      })
+      onChange?.(uploadResponse.url!)
+      console.log('Upload successful', uploadResponse)
     } catch (error) {
       if (error instanceof ImageKitAbortError)
-        console.log("Upload aborted", error.reason);
+        console.log('Upload aborted', error.reason)
       else if (error instanceof ImageKitInvalidRequestError)
-        console.log("Invalid request", error.message);
+        console.log('Invalid request', error.message)
       else if (error instanceof ImageKitUploadNetworkError)
-        console.log("Network error", error.message);
+        console.log('Network error', error.message)
       else if (error instanceof ImageKitServerError)
-        console.error("Server error:", error.message);
+        console.error('Server error:', error.message)
       else if (error instanceof Error)
-        console.error("Upload Error:", error.message);
+        console.error('Upload Error:', error.message)
     } finally {
-      setIsLoading(false);
-      setProgress(0);
+      setIsLoading(false)
     }
-  };
+  }
 
   return (
     <ImageKitProvider urlEndpoint={config.imagekit.urlEndpoint}>
-      <div className="">
-        {/* <Image
-          className="object-cover aspect-square h-36 rounded-t-lg"
-          width={150}
-          height={150}
-          src={url || "/default-image.jpg"}
-          alt="University card"
-        /> */}
+      <div className=''>
         <input
-          type="file"
+          type='file'
           ref={fileInputRef}
           onChange={handleFileChange}
-          style={{ display: "none" }}
-          accept="image/*"
+          style={{ display: 'none' }}
+          accept='image/*'
           name={fieldName}
         />
         <Button
-          type="button"
+          type='button'
           onClick={() => fileInputRef.current?.click()}
           disabled={isLoading}
-          className={cn("upload-btn", styles.button)}
+          className={cn('upload-btn', styles.button)}
         >
-          <Image
-            src="@/icons/upload.svg"
-            alt="Upload icon"
-            width={20}
-            height={20}
-            className="object-contain "
-          />
-          <p className="text-base text-lime-100">Upload a File</p>
-          {file && <p className="upload-filename">{file.name}</p>}
+          <Upload />
+
+          <p className='text-base text-lime-100'>Upload a File</p>
+          {file && <p className='upload-filename'>{file.name}</p>}
         </Button>
         {value && (
           <Image
-            className="object-cover aspect-square h-36 rounded-t-lg"
+            className='object-cover aspect-square h-36 rounded-t-lg'
             width={500}
-            height={500}
+            height={300}
             src={value}
-            alt="University card"
+            alt='University card'
           />
         )}
       </div>
     </ImageKitProvider>
-  );
-};
+  )
+}
 
-export default FileUpload;
+export default FileUpload
