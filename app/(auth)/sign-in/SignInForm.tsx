@@ -1,16 +1,18 @@
-"use client";
-import AuthForm from "@/components/AuthForm";
-import { signInSchema } from "@/lib/validation";
+'use client'
+import AuthForm from '@/components/AuthForm'
+import { signInWithCredentials } from '@/lib/actions/auth'
+import { signInSchema } from '@/lib/validation'
 
 const SignInForm = () => (
   <AuthForm
-    type="SIGN_IN"
+    type='SIGN_IN'
     schema={signInSchema}
     defaultValues={{
-      email: "",
-      password: "",
+      email: '',
+      password: '',
     }}
+    onSubmit={signInWithCredentials}
   />
-);
+)
 
-export default SignInForm;
+export default SignInForm
