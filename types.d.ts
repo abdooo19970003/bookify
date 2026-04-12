@@ -15,4 +15,21 @@ interface Book {
   // createdAt: Date | null;
 }
 
-export type { Book };
+interface AuthCredentials {
+  fullName: string;
+  email: string;
+  password: string;
+  universityId: number;
+  universityCard: string;
+}
+
+interface ApiResponse {
+  success: boolean;
+  message: string?;
+  data: any?,
+  error: string?
+}
+
+
+
+export type { Book, AuthCredentials, ApiResponse };

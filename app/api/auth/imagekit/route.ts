@@ -1,5 +1,4 @@
 import ImageKit from "imagekit";
-import "dotenv/config";
 import config from "@/lib/config";
 import { NextResponse } from "next/server";
 

@@ -1,4 +1,3 @@
-import "dotenv/config";
 const config = {
   imagekit: {
     publicKey: process.env.NEXT_PUBLIC_IMAGEKIT_PUBLIC_KEY || "",
@@ -9,6 +8,9 @@ const config = {
     endpoint: process.env.NEXT_PUBLIC_API_ENDPOINT || "",
     prodEndpoint: process.env.NEXT_PUBLIC_PROD_API_ENDPOINT || "",
   },
+  databaseUrl: process.env.DATABASE_URL || "",
+  authSecret: process.env.BETTER_AUTH_SECRET || ""
+
 };
 
 export default config;
