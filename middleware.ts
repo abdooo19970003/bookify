@@ -32,14 +32,14 @@ export async function middleware(req: NextRequest) {
   // Protecte all routes but auth Routes
   if (!pathname.startsWith('/sign-in') &&
     !pathname.startsWith('/sign-up')) {
-    const token = req.cookies.get('authjs.session-token')
+    const token = req.cookies.get('authjs.session-token') || req.cookies.get("__Secure-authjs.session-token")
     if (!token)
       return NextResponse.redirect(loginUrl)
   }
 
   // disable auth routes for authanticated users
   if (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up')) {
-    const token = req.cookies.get('authjs.session-token')
+    const token = req.cookies.get('authjs.session-token') || req.cookies.get("__Secure-authjs.session-token")
     if (token) {
       return NextResponse.redirect(new URL('/', req.url))
     }
