@@ -13,6 +13,13 @@ const config = {
   upstash: {
     databaseUrl: process.env.UPSTASH_REDIS_REST_URL || "",
     token: process.env.UPSTASH_REDIS_REST_TOKEN || ""
+  },
+  workflow: {
+    qstashUrl: process.env.QSTASH_URL || "",
+    qstashToken: process.env.QSTASH_TOKEN || "",
+    qstashCurrentSigningKey: process.env.QSTASH_CURRENT_SIGNING_KEY || "",
+    qstashNextSigningKey: process.env.QSTASH_NEXT_SIGNING_KEY || "",
+
   }
 };
 

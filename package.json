@@ -19,6 +19,7 @@
     "@neondatabase/serverless": "^1.0.2",
     "@tanstack/react-form": "^1.28.6",
     "@upstash/ratelimit": "^2.0.8",
+    "@upstash/workflow": "^1.2.0",
     "autoprefixer": "^10.4.27",
     "bcryptjs": "^3.0.3",
     "class-variance-authority": "^0.7.1",
