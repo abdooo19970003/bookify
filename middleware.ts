@@ -27,6 +27,7 @@ export async function middleware(req: NextRequest) {
     if (!success) {
       return NextResponse.redirect(tooFastUrl)
     }
+    return NextResponse.next()
   }
 
   // Protecte all routes but auth Routes
