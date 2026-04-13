@@ -22,11 +22,6 @@ const nextConfig: NextConfig = {
   typescript: {
     ignoreBuildErrors: true,
   },
-  i18n: {
-    locales: ["en"],
-    defaultLocale: "en",
-  },
-
 };
 
 export default nextConfig;
