@@ -36,7 +36,7 @@ export async function middleware(req: NextRequest) {
   //   }
   // }
   // Protect All Routes 
-  if (!pathname.startsWith('/sign-in') && !pathname.startsWith('/sign-up')) {
+  if (!pathname.startsWith('/sign-in') || !pathname.startsWith('/sign-up')) {
     const token = req.cookies.get("authjs.session-token")
     if (!token) {
       return NextResponse.redirect(loginUrl)
