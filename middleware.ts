@@ -28,13 +28,19 @@ export async function middleware(req: NextRequest) {
     }
   }
 
-  // Protected Routes
-  if (pathname.startsWith('/dashboard')) {
-    const token = req.cookies.get("authjs.session-token")
-    if (!token) {
-      return NextResponse.redirect(loginUrl)
-    }
+  // // Protected Routes
+  // if (pathname.startsWith('/dashboard')) {
+  //   const token = req.cookies.get("authjs.session-token")
+  //   if (!token) {
+  //     return NextResponse.redirect(loginUrl)
+  //   }
+  // }
+  // Protect All Routes 
+  const token = req.cookies.get("authjs.session-token")
+  if (!token) {
+    return NextResponse.redirect(loginUrl)
   }
+
 
   // disable auth routes for authanticated users 
   if (pathname.startsWith('/sign-in') || pathname.startsWith('/sign-up')) {
